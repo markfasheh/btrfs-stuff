@@ -141,7 +141,8 @@ void btrfs_inherit_iflags(struct inode *inode, struct inode *dir)
 	}
 
 	if (flags & BTRFS_INODE_NODATACOW)
-		BTRFS_I(inode)->flags |= BTRFS_INODE_NODATACOW;
+		BTRFS_I(inode)->flags |= BTRFS_INODE_NODATACOW |
+					 BTRFS_INODE_NODATASUM;
 
 	btrfs_update_iflags(inode);
 }
