@@ -1473,6 +1473,10 @@ int btrfs_qgroup_reserve(struct btrfs_root *root, u64 num_bytes)
 	 * be exceeded
 	 */
 	ulist = ulist_alloc(GFP_ATOMIC);
+	if (!ulist) {
+		ret = -ENOMEM;
+		goto out;
+	}
 	ulist_add(ulist, qgroup->qgroupid, (unsigned long)qgroup, GFP_ATOMIC);
 	ULIST_ITER_INIT(&uiter);
 	while ((unode = ulist_next(ulist, &uiter))) {
@@ -1545,6 +1549,10 @@ void btrfs_qgroup_free(struct btrfs_root *root, u64 num_bytes)
 		goto out;
 
 	ulist = ulist_alloc(GFP_ATOMIC);
+	if (!ulist) {
+		btrfs_std_error(fs_info, -ENOMEM);
+		goto out;
+	}
 	ulist_add(ulist, qgroup->qgroupid, (unsigned long)qgroup, GFP_ATOMIC);
 	ULIST_ITER_INIT(&uiter);
 	while ((unode = ulist_next(ulist, &uiter))) {
